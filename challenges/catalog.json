@@ -1,0 +1,332 @@
+[
+  {
+    "number": 1,
+    "statement": "Deal due diligence. Find gaps and inconsistencies in company documents; link findings to evidence.",
+    "track": "Investment Banking and Commercial Banking",
+    "mvps": [
+      "Compare management claims with finance-report figures",
+      "Track unsigned or missing deal documents",
+      "Rank review findings with source excerpts"
+    ],
+    "data": "deal_metrics.csv and documents/management-summary.txt, finance-report.txt, contract-register.txt"
+  },
+  {
+    "number": 2,
+    "statement": "Comparable-company analysis. Select peers and assemble financial metrics with traceable sources.",
+    "track": "Investment Banking and Commercial Banking",
+    "mvps": [
+      "Compare three peers on consistent-period revenue and margins",
+      "Explain why a selected peer belongs in the comparison",
+      "Flag mismatched units and reporting periods"
+    ],
+    "data": "monthly_financials.csv (three synthetic companies); add valuation fields if needed"
+  },
+  {
+    "number": 3,
+    "statement": "Business financing comparison. Compare loan costs, repayment schedules and restrictions.",
+    "track": "Investment Banking and Commercial Banking",
+    "mvps": [
+      "Compare equal-principal loan schedules and total interest",
+      "Compare fees and prepayment conditions in term sheets",
+      "Stress-test debt-service cash coverage"
+    ],
+    "data": "loan_covenants.csv; create clearly labeled term-sheet assumptions"
+  },
+  {
+    "number": 4,
+    "statement": "Suspicious transaction review. Prioritize alerts and investigate related activity using synthetic data.",
+    "track": "Investment Banking and Commercial Banking",
+    "mvps": [
+      "Flag repeat payments and unusual amounts with explicit rules",
+      "Group alerts by counterparty and time window",
+      "Build a reviewer disposition and evidence queue"
+    ],
+    "data": "payments.csv and invoices.csv"
+  },
+  {
+    "number": 5,
+    "statement": "Borrower covenant monitoring. Check borrower reports against loan requirements and flag exceptions.",
+    "track": "Investment Banking and Commercial Banking",
+    "mvps": [
+      "Check leverage and debt-service covenants",
+      "Track quarterly covenant headroom",
+      "Link a breached calculation to the agreement definition"
+    ],
+    "data": "loan_covenants.csv and documents/loan-policy.txt"
+  },
+  {
+    "number": 6,
+    "statement": "Audit evidence organizer. Match documents to requests and identify missing support.",
+    "track": "Accounting, Audit and Financial Controls",
+    "mvps": [
+      "Match an audit request list to uploaded documents",
+      "Identify missing evidence by reporting period",
+      "Track reviewer sign-off on source-linked evidence"
+    ],
+    "data": "data/documents/ plus a team-authored audit request list"
+  },
+  {
+    "number": 7,
+    "statement": "Financial record reconciliation. Match transactions, invoices, receipts and ledger entries for review.",
+    "track": "Accounting, Audit and Financial Controls",
+    "mvps": [
+      "Match invoice amounts to aggregate payments",
+      "Find repeated invoice identifiers per vendor",
+      "Explain partial payment and unmatched-record exceptions"
+    ],
+    "data": "invoices.csv, payments.csv, vendors.csv"
+  },
+  {
+    "number": 8,
+    "statement": "Financial variance analysis. Explain differences across actuals, budgets and prior periods.",
+    "track": "Accounting, Audit and Financial Controls",
+    "mvps": [
+      "Compare monthly revenue with budget",
+      "Compare expense actuals with budget by period",
+      "Build a source-linked variance explanation worksheet"
+    ],
+    "data": "monthly_financials.csv"
+  },
+  {
+    "number": 9,
+    "statement": "Month-end close coordination. Track dependencies, unresolved balances and reviewer approvals.",
+    "track": "Accounting, Audit and Financial Controls",
+    "mvps": [
+      "Track close tasks and dependencies",
+      "Prioritize unresolved balances needing evidence",
+      "Record preparer and reviewer approvals"
+    ],
+    "data": "monthly_financials.csv plus a small team-authored close task list"
+  },
+  {
+    "number": 10,
+    "statement": "Purchasing and expense controls. Flag duplicate payments, missing approvals and policy exceptions.",
+    "track": "Accounting, Audit and Financial Controls",
+    "mvps": [
+      "Flag missing purchase orders and approvals",
+      "Find payments exceeding invoice values",
+      "Prioritize missing-receipt exceptions"
+    ],
+    "data": "invoices.csv"
+  },
+  {
+    "number": 11,
+    "statement": "Vendor and software spending. Find duplicate tools, unused subscriptions and renewal opportunities.",
+    "track": "Consulting, Business Operations and Financial Planning",
+    "mvps": [
+      "Summarize software spend by vendor",
+      "Flag possible overlapping subscriptions for review",
+      "Track renewal dates and active seats"
+    ],
+    "data": "invoices.csv and vendors.csv; add synthetic seat and renewal fields"
+  },
+  {
+    "number": 12,
+    "statement": "Business process improvement. Identify bottlenecks and estimate benefits from workflow changes.",
+    "track": "Consulting, Business Operations and Financial Planning",
+    "mvps": [
+      "Measure request-to-approval time from a synthetic event log",
+      "Identify bottlenecks by stage and owner",
+      "Estimate savings from a stated process change"
+    ],
+    "data": "campus_expenses.csv; add workflow timestamp fixtures"
+  },
+  {
+    "number": 13,
+    "statement": "Business cash flow forecasting. Anticipate cash shortages and test payment-timing scenarios.",
+    "track": "Consulting, Business Operations and Financial Planning",
+    "mvps": [
+      "Forecast monthly cash using receipts and payments",
+      "Stress-test delayed customer collections",
+      "Compare base and downside closing cash"
+    ],
+    "data": "monthly_financials.csv"
+  },
+  {
+    "number": 14,
+    "statement": "Invoice collections. Track overdue invoices, prioritize follow-up and draft reminders.",
+    "track": "Consulting, Business Operations and Financial Planning",
+    "mvps": [
+      "Build an invoice aging queue using a fixed date",
+      "Rank overdue balances by amount and age",
+      "Draft editable collection reminders with source amounts"
+    ],
+    "data": "invoices.csv (payables structure); adapt to explicitly fictional customer receivables"
+  },
+  {
+    "number": 15,
+    "statement": "Startup runway planning. Model how hiring, spending, revenue and fundraising affect cash.",
+    "track": "Consulting, Business Operations and Financial Planning",
+    "mvps": [
+      "Calculate runway under revenue and spending assumptions",
+      "Model a hiring plan against cash reserves",
+      "Compare fundraising timing scenarios"
+    ],
+    "data": "monthly_financials.csv"
+  },
+  {
+    "number": 16,
+    "statement": "Company filing analysis. Compare reporting periods and changed disclosures with source evidence.",
+    "track": "Investment Research, Wealth Management and Education",
+    "mvps": [
+      "Compare two filings with dated source excerpts",
+      "Extract consistent-period revenue and debt facts",
+      "Flag changed claims for analyst review"
+    ],
+    "data": "deal_metrics.csv and deal documents; optional SEC wrapper"
+  },
+  {
+    "number": 17,
+    "statement": "Portfolio concentration. Reveal overlapping holdings and company or sector exposure.",
+    "track": "Investment Research, Wealth Management and Education",
+    "mvps": [
+      "Aggregate exposure across accounts by security",
+      "Measure sector concentration",
+      "Show the largest holdings and explicit threshold flags"
+    ],
+    "data": "portfolio_holdings.csv"
+  },
+  {
+    "number": 18,
+    "statement": "Investment fee impact. Model long-term fee costs with editable assumptions.",
+    "track": "Investment Research, Wealth Management and Education",
+    "mvps": [
+      "Calculate annual fees by holding",
+      "Model fee drag under stated return assumptions",
+      "Compare fee schedules without predicting investment returns"
+    ],
+    "data": "portfolio_holdings.csv"
+  },
+  {
+    "number": 19,
+    "statement": "Financial claim checks. Verify headlines, memos and presentations against source documents.",
+    "track": "Investment Research, Wealth Management and Education",
+    "mvps": [
+      "Check management revenue claims against finance reports",
+      "Check cash claims against a source table",
+      "Identify unsupported claims and cite conflicting evidence"
+    ],
+    "data": "deal_metrics.csv and deal documents"
+  },
+  {
+    "number": 20,
+    "statement": "3D investing game. Teach risk, diversification, liquidity and fees through guided missions.",
+    "track": "Investment Research, Wealth Management and Education",
+    "mvps": [
+      "Design a mission teaching diversification with fictional holdings",
+      "Simulate liquidity shocks with explicit rules",
+      "Calculate fee outcomes behind a future 3D learning experience"
+    ],
+    "data": "portfolio_holdings.csv"
+  },
+  {
+    "number": 21,
+    "statement": "Variable-income budgeting. Plan around changing income, upcoming bills and potential shortfalls.",
+    "track": "Student and Campus Finance",
+    "mvps": [
+      "Plan expenses around variable monthly income",
+      "Identify upcoming cash shortfalls",
+      "Compare base and low-income budget scenarios"
+    ],
+    "data": "monthly_financials.csv as a schema example; create household income fixtures"
+  },
+  {
+    "number": 22,
+    "statement": "Fair shared expenses. Manage unequal contributions, changing participation and balances.",
+    "track": "Student and Campus Finance",
+    "mvps": [
+      "Calculate balances for unequal expense shares",
+      "Adjust participation by expense date",
+      "Generate a proposed settlement list without moving funds"
+    ],
+    "data": "campus_expenses.csv; add participants and shares"
+  },
+  {
+    "number": 23,
+    "statement": "Full-cost housing comparison. Compare rent, deposits, utilities, transportation and lease length.",
+    "track": "Student and Campus Finance",
+    "mvps": [
+      "Compare annual rent plus utilities and transport",
+      "Separate upfront deposits from recurring costs",
+      "Compare lease-length scenarios with explicit assumptions"
+    ],
+    "data": "campus_expenses.csv as a schema example; create housing offer fixtures"
+  },
+  {
+    "number": 24,
+    "statement": "Student organization finances. Track budgets, reimbursements, event spending and officer handoffs.",
+    "track": "Student and Campus Finance",
+    "mvps": [
+      "Track event expenses against budgets",
+      "Queue reimbursements missing receipts",
+      "Create an officer-handoff financial summary"
+    ],
+    "data": "campus_expenses.csv"
+  },
+  {
+    "number": 25,
+    "statement": "First job offer comparison. Compare compensation, benefits, relocation and living costs.",
+    "track": "Student and Campus Finance",
+    "mvps": [
+      "Compare salary, benefits and relocation costs",
+      "Model living-cost differences by location",
+      "Show first-year cash scenarios with participant-entered tax assumptions"
+    ],
+    "data": "monthly_financials.csv as a schema example; create fictional job offers"
+  },
+  {
+    "number": 26,
+    "statement": "Stablecoin invoice-to-cash. Match USDC payments to invoices and export AR aging.",
+    "track": "Blockchain and Crypto",
+    "mvps": [
+      "Issue a unique USDC payment address per invoice on Base Sepolia",
+      "Auto-match full, partial and late payments to the correct invoice",
+      "Export an AR aging report from matched and unmatched invoices"
+    ],
+    "data": "Synthetic invoices plus Base Sepolia/Coinbase Server Wallets fixtures; no local CSV"
+  },
+  {
+    "number": 27,
+    "statement": "Crypto cost-basis ledger. Reconcile exchange and wallet activity; compute FIFO versus HIFO gains.",
+    "track": "Blockchain and Crypto",
+    "mvps": [
+      "Match transfers between a user's Coinbase exchange CSV and a wallet address",
+      "Compute realized gains under FIFO versus HIFO with a per-lot audit trail",
+      "Flag unmatched transfers and missing basis instead of guessing"
+    ],
+    "data": "Coinbase transaction CSV, Etherscan V2 wallet history, Coinbase Exchange prices; synthetic fixtures OK"
+  },
+  {
+    "number": 28,
+    "statement": "Stablecoin treasury risk monitor. Track peg deviation, concentration and rebalance alerts.",
+    "track": "Blockchain and Crypto",
+    "mvps": [
+      "Pull live and historical pricing for a sample multi-stablecoin treasury",
+      "Score issuer concentration and peg deviation with plain-language alerts",
+      "Replay a past depeg scenario against a stated rebalance policy"
+    ],
+    "data": "Hypothetical treasury fixture; DeFiLlama stablecoin data and Coinbase Exchange market data"
+  },
+  {
+    "number": 29,
+    "statement": "Counterparty wallet screening. Triage wallet risk into approve, review or reject with a logged rationale.",
+    "track": "Blockchain and Crypto",
+    "mvps": [
+      "Check a pasted wallet address against public OFAC SDN data",
+      "Summarize wallet age, activity and limited fund-source hops from public explorers",
+      "Produce approve, review or reject with a logged rationale framed as triage, not compliance certification"
+    ],
+    "data": "Public OFAC SDN plus Blockscout or Etherscan history; synthetic address fixtures for demos"
+  },
+  {
+    "number": 30,
+    "statement": "AI agent spend controls. Bound agent USDC payments with policy, escalation and an audit trail.",
+    "track": "Blockchain and Crypto",
+    "mvps": [
+      "Approve one USDC x402 purchase under an allowlist and budget",
+      "Block one purchase that violates vendor, amount or budget policy",
+      "Escalate one purchase to a human and produce a finance-ready ledger of all three outcomes"
+    ],
+    "data": "Synthetic policy config plus Base Sepolia x402 / AgentKit / Server Wallets demo purchases"
+  }
+]

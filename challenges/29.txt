@@ -1,0 +1,14 @@
+CHALLENGE 29: Counterparty wallet screening. Triage wallet risk into approve, review or reject with a logged rationale.
+Track: Blockchain and Crypto
+
+THREE POSSIBLE MVPS — choose one first
+1. Check a pasted wallet address against public OFAC SDN data.
+2. Summarize wallet age, activity and limited fund-source hops from public explorers.
+3. Produce approve, review or reject with a logged rationale framed as triage, not compliance certification.
+
+STARTING DATA
+No local CSV for this challenge. Suggested free inputs: public OFAC SDN lists plus Blockscout or Etherscan history. Create a small explicitly synthetic address set with known OFAC-hit and clean fixtures for demos. Frame output as risk triage for merchants and lenders, not a compliance certification.
+
+BUILD PROMPT
+Help our team build Challenge 29. First ask which of the three MVPs fits our intended user. Use the existing backend, CSV parser, exact-money utilities and Supabase team model where they help. Work from public OFAC and explorer inputs and identify any missing inputs. Create deterministic triage rules and source-linked evidence before explanatory prose. Do not implement UI, an LLM provider or a reference app unless we explicitly request that extension. No app LLM service is included. Our coding assistant can still write and explain code.
+Define three acceptance checks: one valid input, one missing/invalid input and one financial/source reconciliation. Preserve address, match sources, hop depth and stated assumptions. Produce runnable changes, tests and a brief demo procedure. Use local fixtures first; set up live APIs only when needed. Never claim the tool certifies compliance.

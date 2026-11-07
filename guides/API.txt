@@ -1,0 +1,35 @@
+BACKEND API
+Start with npm run dev. Base: http://127.0.0.1:4180
+Requests and responses are JSON. Except health/sample/analyze/runway, routes require Authorization: Bearer <signed-in-user-access-token>. No UI is included.
+
+GET /api/health — configuration presence only, not proof of connection.
+GET /api/sample — deterministic full AP analysis.
+POST /api/analyze — {"csv":"<invoice CSV text>","asOf":"2026-09-30"}.
+POST /api/runway — {"cash":"100000.00","monthlyRevenue":"10000.00","monthlyCost":"25000.00","months":12}.
+GET /api/teams — teams visible to the current user.
+POST /api/teams — {"name":"Team name"}.
+POST /api/members — {"team_id":"UUID","user_id":"UUID"}; owner only.
+POST /api/datasets/import — {"team_id":"UUID","name":"invoices","csv":"..."}.
+POST /api/documents — {"team_id":"UUID","filename":"example.txt","base64":"<file bytes encoded as base64>"}; max 5 MB file. PDF, TXT and CSV only.
+POST /api/documents/UUID/parse — TXT/CSV extracts locally; PDF submits an asynchronous LlamaParse fast-tier job using LLAMA_CLOUD_API_KEY. May incur account usage.
+GET /api/documents/UUID/result — returns saved text or raw parser response/status. Review parser output before storing text.
+POST /api/documents/text — {"document_id":"UUID","text":"reviewed extracted text"}; stores exact source text and chunks for evidence. Replacing text regenerates evidence and removes old finding-evidence links through cascade; re-link findings after review.
+POST /api/evidence/search — {"team_id":"UUID","query":"cash balance"}; keyword retrieval over up to 1,000 visible chunks. This is not semantic search or generated Q&A.
+POST /api/findings — {"team_id":"UUID","title":"...","detail":"...","severity":"high","method":"deterministic","rule":"overpayment"}.
+Use the authenticated Supabase client to update review_status or insert rhb_finding_evidence links.
+
+PowerShell offline example:
+Invoke-RestMethod http://127.0.0.1:4180/api/sample
+$body = @{ csv = Get-Content -Raw data/invoices.csv; asOf = '2026-09-30' } | ConvertTo-Json
+Invoke-RestMethod http://127.0.0.1:4180/api/analyze -Method Post -ContentType 'application/json' -Body $body
+
+EXTERNAL DATA WRAPPERS
+lib/sources.js: companyFacts(CIK), fredSeries(seriesId), bankInstitutions(certificate).
+Configure identifying SEC_USER_AGENT, FRED_API_KEY and FDIC_API_KEY where needed. Responses preserve provider data; no universal accounting normalization is claimed. Respect source rate/usage policies and add caching for shared event use.
+lib/documents.js: startParse and getParse use LlamaParse v2. Parser tier is fast and version is pinned. No LLM provider implementation is supplied.
+https://developers.llamaindex.ai/llamaparse/parse/guides/api-reference/
+
+OPTIONAL SANDBOX HELPERS
+lib/sandboxes.js provides stripeTestCheckout (requires a test Price ID, test key and idempotency key) and plaidSandboxItem (creates/exchanges sandbox tokens only). These helpers are not exposed as unauthenticated HTTP routes. No payment webhook or fulfillment system is implemented; verify Stripe events with its official SDK and persist event IDs before adding fulfillment. Do not log returned Plaid access tokens.
+https://docs.stripe.com/api/checkout/sessions/create
+https://plaid.com/docs/api/sandbox/

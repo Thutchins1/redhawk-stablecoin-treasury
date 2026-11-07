@@ -1,0 +1,27 @@
+BASELINE SUPABASE SETUP
+1. Sign in at https://supabase.com/dashboard and create a NEW project for the team.
+2. Open SQL Editor and run supabase/migrations/202610050001_baseline.sql once. It creates rhb_ tables, functions, RLS policies and a private rhb-documents bucket. Do not run against an existing project with identically named tables.
+3. Copy .env.example to .env. Set SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY. No service-role key is needed.
+4. Enable email authentication. Sign up/confirm each team user. Use the Supabase JavaScript client auth.signUp and auth.signInWithPassword functions in your eventual app, or create test users in the dashboard. A successful sign-in returns session.access_token. Never paste passwords or tokens into your AI conversation.
+5. For CLI testing only, place the short-lived session.access_token in SUPABASE_ACCESS_TOKEN. Run npm run check. Refresh the token by signing in again if it expires; this CLI does not maintain a persistent session.
+6. POST /api/teams with the signed-in user's Bearer token and {"name":"My team"}. The authenticated user becomes owner. POST /api/members with team_id and an already registered teammate user_id. Only the owner can add/remove members. There is no public join code or email invitation service.
+7. Import with npm run import:data -- TEAM_UUID invoices. Repeat for payments and vendors. Imports upsert by stable key; omitting a row does not delete an old record.
+8. Upload a fictional TXT/PDF with /api/documents. Bucket paths start with the team UUID. Team members share rows; other teams and anonymous users have no access.
+9. Verify with two users in different teams: select, insert, update and delete should be denied across team boundaries. Removing a member should revoke row and object access. npm run db:test exercises these policies in local PostgreSQL; repeat against the hosted service.
+
+SCHEMA
+rhb_teams: team name and immutable owner ID.
+rhb_members: team membership managed by the owner.
+rhb_datasets: source datasets unique by team/name.
+rhb_records: imported JSON rows with record keys and source row numbers.
+rhb_documents: private object metadata, SHA-256, parse state and reviewed text.
+rhb_evidence: source excerpts with exact offsets.
+rhb_findings: severity, method, explanation and reviewer disposition.
+rhb_finding_evidence: cross-reference findings to evidence within the same team.
+All exposed tables have RLS. Composite foreign keys prevent cross-team document/dataset/evidence links. Members can edit their team's analytical data; membership management is owner-only. No production compliance claims.
+
+Official sources:
+https://supabase.com/docs/guides/database/postgres/row-level-security
+https://supabase.com/docs/guides/storage/security/access-control
+https://supabase.com/docs/reference/javascript/initializing
+https://supabase.com/docs/guides/auth/passwords

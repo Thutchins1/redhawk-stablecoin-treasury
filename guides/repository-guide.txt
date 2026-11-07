@@ -1,0 +1,50 @@
+REFERENCE REPOSITORIES
+Documentation review only; third-party applications have not been installed or audited. Links do not grant the assistant network access.
+
+Krever/fintech-engineering-handbook — Core reading
+https://github.com/Krever/fintech-engineering-handbook
+Money precision, currency handling, reconciliation and reliable transaction patterns. Assign selected sections before building.
+Reference; not an application template.
+License noted in review: CC BY 4.0 (README)
+
+moov-io/awesome-fintech — Core resource directory
+https://github.com/moov-io/awesome-fintech
+Strong fit for banking and payments projects. Use it to find focused libraries rather than installing everything.
+Directory only; each linked project has its own requirements and license.
+License noted in review: No root license identified via GitHub metadata
+
+formancehq/ledger — Advanced optional module
+https://github.com/formancehq/ledger
+Programmable ledger for balances, postings and money movement; useful for accounting and payments teams.
+Requires additional services; its standalone example runs PostgreSQL and ledger components through Docker.
+License noted in review: MIT
+
+Crossmint/fintech-starter-app — Optional blockchain reference
+https://github.com/Crossmint/fintech-starter-app
+Wallet login, USDC transfers and onramp examples. A focused starting point for wallet projects.
+Requires Crossmint setup. Use staging; withdrawal functionality is production-only according to its README.
+License noted in review: MIT
+
+Alice53211/arc-fintech-app — Advanced blockchain reference
+https://github.com/Alice53211/arc-fintech-app
+Multi-chain treasury using Next.js, Supabase and Circle. Relevant to treasury concepts.
+More setup: Circle credentials, Supabase and webhooks. Testnet sample; not the default event starter.
+License noted in review: Apache-2.0
+
+angieruiz17/claude-fintech-skills — Select individual references
+https://github.com/angieruiz17/claude-fintech-skills
+Specialized trading, authentication and infrastructure guidance. Potentially useful for advanced teams.
+Much of the material is beyond this event. README badges point to another repository; review provenance and individual files before adopting agent instructions.
+License noted in review: MIT
+
+7kfpun/awesome-fintech — Secondary directory
+https://github.com/7kfpun/awesome-fintech
+Language-specific financial libraries, charting and research tools.
+Check each linked package for current support. This is a library catalog, not runnable starter code.
+License noted in review: CC0-1.0
+
+brandonhimpfen/awesome-fintech — Secondary discovery list
+https://github.com/brandonhimpfen/awesome-fintech
+Broad overview of fintech product categories and services.
+Includes commercial services and broad product links. Verify current availability and pricing individually.
+License noted in review: No root license identified via GitHub metadata

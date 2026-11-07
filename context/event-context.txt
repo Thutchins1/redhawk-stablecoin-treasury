@@ -1,0 +1,9 @@
+REDHAWK BUILDS 2026 — EVENT CONTEXT
+Working participant context, October 6, 2026. Organizer decisions supersede this sample.
+November 6–8, 2026. Miami University, McVey Data Science Building. All times America/New_York.
+Focus: AI in business, especially internal banking, consulting and accounting workflows. Students have varied technical experience.
+Friday 5–8pm: setup, financial documents, idea-to-prototype workshops and a four-person banking/consulting fireside chat, in two parallel rounds.
+Saturday: 9am breakfast/check-in, 9:30 kickoff, 10am building and team mixer. Mentor windows: 10–12, 1–3, 3–5, 5–8, 8–10pm. Saturday technical workshop choice remains pending. Submission/pitch workshop proposed for 4pm.
+Sunday: complete Devpost submission due 10am; table judging 10:30–11:30; five finalists announced noon; finalist pitches at 1pm (4 minutes plus 3 minutes Q&A); awards 2pm; finish 2:30pm.
+Three overall cash prizes planned: $2,000 / $1,000 / $500. Best Use of ElevenLabs is selected by judges and open to any participating team using it; opt in at Devpost submission. It can overlap with an overall award.
+Judging rubric is published at 100 points on the event site. Blockchain statements 26–30 from Sam Yeh are in challenges/26.txt through challenges/30.txt. Suggested Coinbase and public-chain tooling is optional, not a confirmed sponsor commitment. Do not invent sponsor commitments or unconfirmed credits.

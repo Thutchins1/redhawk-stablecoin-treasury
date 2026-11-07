@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stablecoin Treasury Monitor</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#17202a;--muted:#5d6b7a;--line:#e3e7ec;--ok:#1a7f4b;--warn:#b26a00;--crit:#b3261e;--accent:#1f5eff;--okbg:#e6f4ec;--warnbg:#fdf1dc;--critbg:#fbe4e2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1318;--card:#171c23;--ink:#e8edf3;--muted:#9aa7b5;--line:#2a323d;--okbg:#10301f;--warnbg:#3a2a08;--critbg:#3d1512;--ok:#5fd38d;--warn:#f5b24a;--crit:#ff7b72;--accent:#6b9bff}}
+:root[data-theme="dark"]{--bg:#0f1318;--card:#171c23;--ink:#e8edf3;--muted:#9aa7b5;--line:#2a323d;--okbg:#10301f;--warnbg:#3a2a08;--critbg:#3d1512;--ok:#5fd38d;--warn:#f5b24a;--crit:#ff7b72;--accent:#6b9bff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:1080px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:32px 0 12px}.sub{color:var(--muted);margin:0 0 20px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}.kpi .value{font-size:24px;font-weight:600;margin-top:2px}.kpi .hint{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}tr:last-child td{border-bottom:0}td.num,th.num{text-align:right}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600}.ok{background:var(--okbg);color:var(--ok)}.warning{background:var(--warnbg);color:var(--warn)}.critical,.high{background:var(--critbg);color:var(--crit)}.medium{background:var(--warnbg);color:var(--warn)}
+.alert{border-left:4px solid var(--warn);padding:10px 14px;margin:8px 0;background:var(--card);border-radius:0 10px 10px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.alert.high{border-left-color:var(--crit)}.alert small{color:var(--muted);display:block;margin-top:4px}
+.bar{height:14px;border-radius:7px;overflow:hidden;display:flex;background:var(--line);margin:8px 0}.bar span{display:block;height:100%}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+form.policy{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));align-items:end}label{font-size:12px;color:var(--muted);display:block}input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+button{padding:9px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font:inherit;font-weight:600;cursor:pointer}button.ghost{background:transparent;color:var(--accent)}
+.verdict{font-size:16px;padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+svg{width:100%;height:auto;display:block}.note{font-size:12px;color:var(--muted)}pre{white-space:pre-wrap;font:inherit;margin:0}
+#explain li{margin:6px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Stablecoin Treasury Monitor</h1>
+<p class="sub">Peg deviation, issuer concentration and a replay of the March 2023 USDC depeg against a stated rebalance policy. Fictional USD 250,000 treasury; prices cached from CoinGecko.</p>
+
+<section class="grid" id="kpis"></section>
+
+<h2>Holdings</h2>
+<table id="holdings"><thead><tr><th>Asset</th><th>Issuer</th><th class="num">Units</th><th class="num">Price</th><th class="num">Off peg (bps)</th><th class="num">Value (USD)</th><th class="num">Share</th><th>Status</th></tr></thead><tbody></tbody></table>
+<p class="note" id="priceNote"></p>
+
+<h2>Issuer concentration</h2>
+<div class="card"><div class="bar" id="bar"></div><div class="legend" id="legend"></div><p class="note" id="hhi"></p></div>
+
+<h2>Alerts</h2>
+<div id="alerts"></div>
+
+<h2>Policy</h2>
+<div class="card"><form class="policy" id="policy">
+ <div><label for="pegWarningBps">Warn at (bps off peg)</label><input id="pegWarningBps" name="pegWarningBps" type="number" min="0" max="10000"></div>
+ <div><label for="pegCriticalBps">Act at (bps off peg)</label><input id="pegCriticalBps" name="pegCriticalBps" type="number" min="0" max="10000"></div>
+ <div><label for="maxIssuerShareBps">Max single issuer (bps of treasury)</label><input id="maxIssuerShareBps" name="maxIssuerShareBps" type="number" min="0" max="10000"></div>
+ <div><label for="rebalanceSellBps">Sell on breach (bps of that asset)</label><input id="rebalanceSellBps" name="rebalanceSellBps" type="number" min="0" max="10000"></div>
+ <div><button type="submit">Re-score with this policy</button></div>
+</form><p class="note" id="policyNote"></p></div>
+
+<h2>Replay: March 2023 depeg</h2>
+<div class="card"><svg id="chart" viewBox="0 0 720 240" role="img" aria-label="Treasury value by day, hold versus policy"></svg><div class="legend"><span><i style="background:var(--accent)"></i>Hold (never trade)</span><span><i style="background:var(--crit)"></i>Follow policy</span></div></div>
+<table id="replay" style="margin-top:12px"><thead><tr><th>Date</th><th>Worst asset</th><th class="num">Off peg (bps)</th><th>Status</th><th class="num">Hold value</th><th class="num">Policy value</th><th class="num">Actions</th></tr></thead><tbody></tbody></table>
+<div id="actions" style="margin-top:12px"></div>
+<p class="verdict" id="verdict" style="margin-top:12px"></p>
+<p class="note" id="replayNote"></p>
+
+<h2>Plain-English summary</h2>
+<div class="card"><button class="ghost" id="explainBtn" type="button">Generate summary</button><ul id="explain"></ul><p class="note" id="explainNote"></p></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);const usd=s=>'$'+Number(s).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});const pct=b=>(b/100).toFixed(2)+'%';
+const colors=['var(--accent)','var(--ok)','var(--warn)','var(--crit)','#8a63d2','#3bb3c3'];
+let policy={};
+async function api(path,bodyObj){const r=await fetch(path,bodyObj?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(bodyObj)}:undefined);const j=await r.json();if(!r.ok)throw Error(j.error||r.statusText);return j;}
+function renderRisk(r){
+ const c=r.concentration;
+ $('#kpis').innerHTML=[['Market value',usd(r.totalValue),'as of '+r.asOf],['Mark vs par',(r.markVersusPar.startsWith('-')?'−':'+')+usd(r.markVersusPar.replace('-','')),'par '+usd(r.parValue)],['Largest issuer',c.largestIssuer+' '+pct(c.largestShareBps),'cap '+pct(c.capBps)],['Herfindahl',c.hhi,c.effectiveIssuers+' effective issuers'],['Open alerts',r.alerts.length,r.alerts.filter(a=>a.severity==='high').length+' high']].map(([l,v,h])=>`<div class="card kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join('');
+ $('#holdings tbody').innerHTML=r.holdings.map(h=>`<tr><td><b>${h.asset}</b></td><td>${h.issuer}</td><td class="num">${Number(h.units).toLocaleString('en-US',{maximumFractionDigits:6})}</td><td class="num">${h.price}</td><td class="num">${h.deviationBps>0?'+':''}${h.deviationBps}</td><td class="num">${usd(h.value)}</td><td class="num">${pct(h.shareBps)}</td><td><span class="badge ${h.level}">${h.level}</span></td></tr>`).join('');
+ $('#priceNote').textContent='Price source: '+[...new Set(r.holdings.map(h=>h.priceSource))].join('; ')+'. Retrieved '+(r.holdings[0].priceRetrieved||'n/a')+'. '+r.assumptions;
+ $('#bar').innerHTML=r.issuers.map((i,k)=>`<span style="width:${i.shareBps/100}%;background:${colors[k%colors.length]}" title="${i.issuer} ${pct(i.shareBps)}"></span>`).join('');
+ $('#legend').innerHTML=r.issuers.map((i,k)=>`<span><i style="background:${colors[k%colors.length]}"></i>${i.issuer} ${pct(i.shareBps)} (${usd(i.value)})</span>`).join('');
+ $('#hhi').textContent=`Herfindahl index ${c.hhi} on a 0–10000 scale (10000 = everything with one issuer). Equivalent to ${c.effectiveIssuers} equally sized issuers.`;
+ $('#alerts').innerHTML=r.alerts.length?r.alerts.map(a=>`<div class="alert ${a.severity}"><span class="badge ${a.severity}">${a.severity}</span> <b>${a.rule.replace('_',' ')}</b> — ${a.message}<small>Evidence: ${Object.entries(a.evidence).map(([k,v])=>k+'='+v).join(', ')} · method: ${a.method}</small></div>`).join(''):'<div class="card">No alerts under the current policy.</div>';
+ for(const k of ['pegWarningBps','pegCriticalBps','maxIssuerShareBps','rebalanceSellBps'])$('#policy [name='+k+']').value=r.policy[k];
+ $('#policyNote').textContent=r.policy.note;policy=r.policy;
+}
+function renderReplay(r){
+ $('#replay tbody').innerHTML=r.days.map(d=>`<tr><td>${d.date}</td><td>${d.hold.worstAsset}</td><td class="num">${d.hold.worstBps>0?'+':''}${d.hold.worstBps}</td><td><span class="badge ${d.hold.level}">${d.hold.level}</span></td><td class="num">${usd(d.hold.value)}</td><td class="num">${usd(d.policy.value)}</td><td class="num">${d.policy.actions||''}</td></tr>`).join('');
+ $('#actions').innerHTML=r.actions.map(a=>`<div class="alert high"><span class="badge high">action</span> <b>${a.date}</b> — sold ${Number(a.sold.units).toLocaleString('en-US')} ${a.sold.asset} at ${a.sold.price} for ${usd(a.sold.proceeds)} (${usd(a.sold.shortfallVersusPar.replace('-',''))} ${a.sold.shortfallVersusPar.startsWith('-')?'above':'below'} par), bought ${Number(a.bought.units).toLocaleString('en-US',{maximumFractionDigits:2})} ${a.bought.asset} at ${a.bought.price}</div>`).join('');
+ $('#verdict').textContent=r.summary;$('#replayNote').textContent=r.source+' (retrieved '+r.retrieved+'). '+r.assumptions;
+ const vals=r.days.flatMap(d=>[Number(d.hold.value),Number(d.policy.value)]);const lo=Math.min(...vals)-500,hi=Math.max(...vals)+500;const W=720,H=240,L=70,R=16,T=16,B=36;
+ const x=i=>L+i*(W-L-R)/(r.days.length-1),y=v=>T+(hi-v)*(H-T-B)/(hi-lo);
+ const line=(key,color)=>`<polyline fill="none" stroke="${color}" stroke-width="2.5" points="${r.days.map((d,i)=>x(i)+','+y(Number(d[key].value))).join(' ')}"/>`+r.days.map((d,i)=>`<circle cx="${x(i)}" cy="${y(Number(d[key].value))}" r="3.5" fill="${color}"><title>${d.date} ${key}: ${usd(d[key].value)}</title></circle>`).join('');
+ const ticks=[lo+500,(lo+hi)/2,hi-500].map(v=>`<text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${Math.round(v/1000)}k</text><line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/>`).join('');
+ $('#chart').innerHTML=ticks+r.days.map((d,i)=>`<text x="${x(i)}" y="${H-12}" text-anchor="middle" font-size="11" fill="var(--muted)">${d.date.slice(5)}</text>`).join('')+line('hold','var(--accent)')+line('policy','var(--crit)');
+}
+async function loadAll(p){try{const [risk,replay]=await Promise.all([api('/api/treasury',p?{policy:p}:undefined),api('/api/treasury/replay',p?{policy:p}:undefined)]);renderRisk(risk);renderReplay(replay);$('#explain').innerHTML='';}catch(e){$('#alerts').innerHTML='<div class="alert high">'+e.message+'</div>';}}
+$('#policy').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);loadAll(Object.fromEntries([...f].map(([k,v])=>[k,Number(v)])));});
+$('#explainBtn').addEventListener('click',async()=>{const j=await api('/api/treasury/explain',{policy});$('#explain').innerHTML=j.lines.map(l=>'<li>'+l+'</li>').join('');$('#explainNote').textContent=j.note;});
+loadAll();
+</script>
+</body>
+</html>

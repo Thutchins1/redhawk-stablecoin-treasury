@@ -1,0 +1,14 @@
+CHALLENGE 30: AI agent spend controls. Bound agent USDC payments with policy, escalation and an audit trail.
+Track: Blockchain and Crypto
+
+THREE POSSIBLE MVPS — choose one first
+1. Approve one USDC x402 purchase under an allowlist and budget.
+2. Block one purchase that violates vendor, amount or budget policy.
+3. Escalate one purchase to a human and produce a finance-ready ledger of all three outcomes.
+
+STARTING DATA
+No local CSV for this challenge. Suggested tooling (not a confirmed sponsor): Coinbase x402, Agentic or Server Wallets and AgentKit on Base Sepolia (free testnet). Create an explicitly synthetic policy config (budget, vendor allowlist, approval threshold) and three demo purchase attempts.
+
+BUILD PROMPT
+Help our team build Challenge 30. First ask which of the three MVPs fits our intended user. Use the existing backend, CSV parser, exact-money utilities and Supabase team model where they help. Work from a policy engine plus Base Sepolia test payments and identify any missing inputs. Create deterministic approve/block/escalate decisions and source-linked evidence before explanatory prose. Do not implement UI, an LLM provider or a reference app unless we explicitly request that extension. No app LLM service is included. Our coding assistant can still write and explain code.
+Define three acceptance checks: one valid input, one missing/invalid input and one financial/source reconciliation. Preserve purchase IDs, policy rules, outcomes and stated assumptions. Produce runnable changes, tests and a brief demo procedure. Use local policy fixtures first; set up live APIs only when needed. Treat Coinbase tooling as optional suggested stack, not required sponsorship.

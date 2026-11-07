@@ -1,0 +1,15 @@
+CHALLENGE 19: Financial claim checks. Verify headlines, memos and presentations against source documents.
+Track: Investment Research, Wealth Management and Education
+
+THREE POSSIBLE MVPS — choose one first
+1. Check management revenue claims against finance reports.
+2. Check cash claims against a source table.
+3. Identify unsupported claims and cite conflicting evidence.
+
+STARTING DATA
+deal_metrics.csv and deal documents
+Six dataset cases are supplied. Where fields are missing, create a small explicitly synthetic fixture; do not pretend that a source contains it.
+
+BUILD PROMPT
+Help our team build Challenge 19. First ask which of the three MVPs fits our intended user. Use the existing backend, CSV parser, exact-money utilities and Supabase team model. Work from the indicated data and identify any missing inputs. Create deterministic calculations and source-linked evidence before explanatory prose. Do not implement UI, an LLM provider or a reference app unless we explicitly request that extension. No app LLM service is included. Our coding assistant can still write and explain code.
+Define three acceptance checks: one valid input, one missing/invalid input and one financial/source reconciliation. Preserve source rows, reporting periods, USD units and stated assumptions. Produce runnable changes, tests and a brief demo procedure. Use local data first; set up live APIs only when needed.

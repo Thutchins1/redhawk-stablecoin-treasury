@@ -1,0 +1,5 @@
+SUBMISSION AND PITCHING
+Complete Devpost project submission is due Sunday November 8, 2026 at 10am Eastern.
+Prepare a user/problem statement, working demo, repository/access instructions, data and code credits, and an honest limitations section. Exact Devpost fields and judging rubric remain to be finalized.
+Best Use of ElevenLabs is an optional Devpost entry selected by judges; explain its use and where judges can see/hear it. Any participating team using ElevenLabs can enter, including an overall winner.
+Prepare an approximately two-minute table pitch. Five finalists give a four-minute pitch plus three minutes of questions. Show the workflow, evidence of usefulness and what actually works.

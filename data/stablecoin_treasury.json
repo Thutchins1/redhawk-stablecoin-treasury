@@ -1,0 +1,15 @@
+{
+  "synthetic": true,
+  "label": "Hypothetical company treasury: USD 250,000 held in three stablecoins. Explicitly fictional fixture for Redhawk Builds Challenge 28.",
+  "holdings": [
+    {"asset": "USDC", "issuer": "Circle", "units": "150000.000000"},
+    {"asset": "USDT", "issuer": "Tether", "units": "60000.000000"},
+    {"asset": "DAI",  "issuer": "MakerDAO", "units": "40000.000000"}
+  ],
+  "policy": {
+    "pegWarningBps": 50,
+    "pegCriticalBps": 200,
+    "maxIssuerShareBps": 5000,
+    "rebalanceSellBps": 5000
+  }
+}

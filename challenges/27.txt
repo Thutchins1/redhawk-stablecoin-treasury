@@ -1,0 +1,14 @@
+CHALLENGE 27: Crypto cost-basis ledger. Reconcile exchange and wallet activity; compute FIFO versus HIFO gains.
+Track: Blockchain and Crypto
+
+THREE POSSIBLE MVPS — choose one first
+1. Match transfers between a user's Coinbase exchange CSV and a wallet address.
+2. Compute realized gains under FIFO versus HIFO with a per-lot audit trail.
+3. Flag unmatched transfers and missing basis instead of guessing.
+
+STARTING DATA
+No local CSV for this challenge. Suggested inputs: a Coinbase transaction CSV export, a wallet address history via Etherscan V2, and Coinbase Exchange price data. Create a small explicitly synthetic exchange CSV and wallet transfer fixture if live keys are unavailable; do not invent filled-in basis.
+
+BUILD PROMPT
+Help our team build Challenge 27. First ask which of the three MVPs fits our intended user. Use the existing backend, CSV parser, exact-money utilities and Supabase team model where they help. Work from the indicated exchange and wallet inputs and identify any missing inputs. Create deterministic lot matching and source-linked evidence before explanatory prose. Do not implement UI, an LLM provider or a reference app unless we explicitly request that extension. No app LLM service is included. Our coding assistant can still write and explain code.
+Define three acceptance checks: one valid input, one missing/invalid input and one financial/source reconciliation. Preserve lot IDs, timestamps, acquisition cost, disposition proceeds and stated assumptions. Produce runnable changes, tests and a brief demo procedure. Use local synthetic fixtures first; set up live APIs only when needed. Never silently invent missing cost basis.

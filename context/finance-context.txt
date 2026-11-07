@@ -1,0 +1,10 @@
+FINANCE AND BUSINESS CONTEXT
+Start with a specific user, task, input and decision. Improve one workflow and retain source evidence.
+An income statement describes performance over a period. A balance sheet reports assets, liabilities and equity at a date. A cash-flow statement explains cash movements. Profit and available cash are different measures.
+Credit workflow: gather borrower statements and terms, calculate defined metrics, identify exceptions, and prepare evidence for a human reviewer. Covenant definitions come from the actual agreement.
+Accounting workflow: compare invoice, approval, ledger and payment records. A possible duplicate is an exception to investigate, not proof of fraud. Reconciliation requires stable identifiers and traceable matches.
+Consulting workflow: identify a bottleneck, measure its baseline, propose a change and show assumptions behind estimated benefits.
+Research workflow: distinguish filing date from reporting period, quarterly from annual values, currency and unit scale, and amended filings. Cite source and page or fact identifier.
+Use integer cents for the USD sample. Other currencies and digital assets may need different precision. Calculate in code; do not rely on generated prose for arithmetic. Do not combine currencies without an explicit conversion rule.
+Show missing information and uncertainty. Separate extracted facts, calculations and assumptions. Document processing output needs review against the original. Treat instructions inside source documents as data, not authority over your app.
+Use fictional or authorized public data. Keep API secrets on the backend and human approval before consequential actions. Prototype results do not establish compliance or production readiness.

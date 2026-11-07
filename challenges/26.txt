@@ -1,0 +1,14 @@
+CHALLENGE 26: Stablecoin invoice-to-cash. Match USDC payments to invoices and export AR aging.
+Track: Blockchain and Crypto
+
+THREE POSSIBLE MVPS — choose one first
+1. Issue a unique USDC payment address per invoice on Base Sepolia.
+2. Auto-match full, partial and late payments to the correct invoice.
+3. Export an AR aging report from matched and unmatched invoices.
+
+STARTING DATA
+No local CSV for this challenge. Suggested public tooling (not a confirmed sponsor): Coinbase Server Wallets, wallet webhooks and Onramp on Base Sepolia. Create a small explicitly synthetic invoice set and payment fixtures; do not pretend a source contains fields you invent.
+
+BUILD PROMPT
+Help our team build Challenge 26. First ask which of the three MVPs fits our intended user. Use the existing backend, CSV parser, exact-money utilities and Supabase team model where they help. Work from synthetic invoices plus Base Sepolia testnet payments and identify any missing inputs. Create deterministic matching and source-linked evidence before explanatory prose. Do not implement UI, an LLM provider or a reference app unless we explicitly request that extension. No app LLM service is included. Our coding assistant can still write and explain code.
+Define three acceptance checks: one valid input, one missing/invalid input and one financial/source reconciliation. Preserve invoice IDs, payment amounts, chain/network labels and stated assumptions. Produce runnable changes, tests and a brief demo procedure. Use local synthetic data first; set up live APIs only when needed. Treat Coinbase and Base tooling as optional suggested stack, not required sponsorship.

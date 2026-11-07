@@ -1,0 +1,9 @@
+FINANCIAL DATA SOURCES
+SEC EDGAR: https://www.sec.gov/search-filings/edgar-application-programming-interfaces
+Public filings and structured financial facts; no API key required. Use a backend with an identifying User-Agent and caching, follow SEC access guidance, and account for the lack of browser CORS. Match period, units and filing version before comparing figures.
+FRED: https://fred.stlouisfed.org/docs/api/fred/
+Economic series for interest-rate and scenario tools. Obtain an API key and retain dates, units and revision context.
+FDIC BankFind: https://api.fdic.gov/banks/docs
+Bank institution and financial datasets; follow current API access requirements and field definitions.
+Local exercise: data/invoices.csv is fictional, USD only. Columns are invoice, vendor, amount, paid and approved. Amounts are decimal strings; approval is yes/no. Expected results are supplied separately.
+For any additional dataset record its source, permission/terms, retrieval date, reporting period, currency, units and missing values. Public company filings do not substitute for private business invoices or ledgers.

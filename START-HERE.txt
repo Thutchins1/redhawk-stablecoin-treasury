@@ -1,0 +1,23 @@
+REDHAWK BUILDS STARTER — VERSION 1.1
+
+UPLOAD THIS ZIP TO YOUR CODING ASSISTANT
+Say: Read LLM-STARTER-PACK.txt. I want to build Challenge #__. Help me choose one MVP, run the existing checks and build from the backend and data supplied. Ask only for decisions you need.
+If your chat cannot read ZIP files, extract and upload LLM-STARTER-PACK.txt plus the selected challenge file. A coding agent should open the entire extracted folder.
+
+TRY IT LOCALLY
+Install Node.js 22 or newer. In this folder run:
+  npm ci
+  npm run demo
+  npm test
+  npm run db:test
+  npm run dev
+The backend runs at http://127.0.0.1:4180/api/health. /api/sample returns the full invoice analysis. No API keys needed for these local paths. There is no UI, chat-model provider implementation or finished reference application.
+
+WHAT YOU GET
+1,500 invoices with 31 fields, 1,424 matching payment rows, 48 vendors and 1,504 fictional source documents. Eight CSVs and six case exercises total 3,406 records. Separate answer keys support verification.
+30 challenge-specific prompts with 90 MVP suggestions. Blockchain/crypto slots 26–30 from Sam Yeh included.
+Team-isolated Supabase database migration, private storage policies, authenticated client, imports, document endpoints, deterministic financial utilities and exact source citations.
+LlamaParse and SEC/FRED/FDIC wrappers. Hosted connections require your keys and the setup guide.
+
+NEXT
+Pick a challenge before setting up optional services. Read guides/SUPABASE-SETUP.txt only when you need cloud persistence. Read guides/API.txt for routes and examples. The assistant should do the coding work available to it, not just provide a plan.

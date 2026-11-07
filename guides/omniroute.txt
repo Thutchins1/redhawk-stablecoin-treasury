@@ -1,0 +1,17 @@
+OMNIROUTE (OPTIONAL MODEL ROUTER)
+What it is: OmniRoute is a free, MIT-licensed, open-source AI gateway you run on your own laptop. It gives you one OpenAI-compatible endpoint (http://localhost:20128/v1) that routes requests across many AI providers and models, with automatic fallback when one provider hits a limit or fails.
+Official repo: https://github.com/diegosouzapw/OmniRoute (redirects to github.com/cheaper-inference/OmniRoute). npm package: omniroute.
+Why use it at RHB: one endpoint and one key in your app, swap or stack models without rewriting code, and lean on free tiers so a team does not burn money during a 24-hour build.
+Free tier note: OmniRoute does not give you tokens. Free capacity comes from third-party provider accounts you connect yourself (for example Gemini, Groq, OpenRouter free models, Cloudflare AI). Each provider sets its own limits and terms. A fresh install can have zero usable routes until you connect one.
+Setup:
+1. Node.js 22+ installed (same as this pack).
+2. npm install -g omniroute
+3. Run: omniroute   (serves the gateway and dashboard on port 20128)
+4. Open the dashboard at http://localhost:20128, connect at least one provider with your own account or API key.
+5. Copy your OmniRoute key from Dashboard > Endpoints. Put it in .env as OMNIROUTE_API_KEY. Never commit it.
+Minimal test:
+curl http://localhost:20128/v1/chat/completions -H "Authorization: Bearer $OMNIROUTE_API_KEY" -H "Content-Type: application/json" -d '{"model":"auto","messages":[{"role":"user","content":"Hello"}]}'
+Minimal Node example (any OpenAI-compatible client works):
+const r = await fetch("http://localhost:20128/v1/chat/completions", {method:"POST", headers:{"Authorization":`Bearer ${process.env.OMNIROUTE_API_KEY}`,"Content-Type":"application/json"}, body:JSON.stringify({model:"auto",messages:[{role:"user",content:"Summarize this invoice exception"}]})});
+console.log((await r.json()).choices[0].message.content);
+Rules: keep the key on the backend, keep calculations in code (lib/), and treat model output as a draft for a human to check. OmniRoute is optional. It is a third-party tool, not an RHB sponsor.
