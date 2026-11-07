@@ -1,5 +1,5 @@
 {
-  "note": "Cached price snapshots so the demo and tests run offline. All prices are USD per token, six decimals, from the CoinGecko MCP connector. Re-run scripts/refresh-prices.js (or the MCP) to refresh the current block; the March 2023 block is historical and should not change.",
+  "note": "Cached price snapshots so the demo and tests run offline. All prices are USD per token, six decimals, from the CoinGecko MCP connector. The current block can be refreshed; the scenario blocks are historical and should not change.",
   "current": {
     "source": "CoinGecko MCP get-coin-markets",
     "retrieved": "2026-11-06",
@@ -9,35 +9,29 @@
       "DAI":  {"price": "1.000000", "source": "CoinGecko MCP get-coin-markets (dai)", "retrieved": "2026-11-06"}
     }
   },
-  "march2023": {
-    "label": "March 2023 USDC depeg (Silicon Valley Bank failure, March 10-13, 2023)",
-    "source": "CoinGecko MCP get-coin-history, 00:00 UTC daily snapshots",
-    "retrieved": "2026-11-06",
-    "dates": ["2023-03-09", "2023-03-10", "2023-03-11", "2023-03-12", "2023-03-13", "2023-03-14"],
-    "prices": {
-      "USDC": {
-        "2023-03-09": "1.001479",
-        "2023-03-10": "1.000142",
-        "2023-03-11": "0.994072",
-        "2023-03-12": "0.960264",
-        "2023-03-13": "0.993544",
-        "2023-03-14": "0.999658"
-      },
-      "USDT": {
-        "2023-03-09": "1.000675",
-        "2023-03-10": "1.000497",
-        "2023-03-11": "1.000010",
-        "2023-03-12": "1.000740",
-        "2023-03-13": "1.008063",
-        "2023-03-14": "1.004856"
-      },
-      "DAI": {
-        "2023-03-09": "0.999937",
-        "2023-03-10": "0.999331",
-        "2023-03-11": "0.995431",
-        "2023-03-12": "0.966877",
-        "2023-03-13": "0.992594",
-        "2023-03-14": "1.001073"
+  "scenarios": {
+    "march2023": {
+      "label": "March 2023 USDC depeg (Silicon Valley Bank failure, March 10-13, 2023)",
+      "short": "March 2023: SVB fails, USDC breaks",
+      "source": "CoinGecko MCP get-coin-history, 00:00 UTC daily snapshots",
+      "retrieved": "2026-11-06",
+      "dates": ["2023-03-09", "2023-03-10", "2023-03-11", "2023-03-12", "2023-03-13", "2023-03-14"],
+      "prices": {
+        "USDC": {"2023-03-09": "1.001479", "2023-03-10": "1.000142", "2023-03-11": "0.994072", "2023-03-12": "0.960264", "2023-03-13": "0.993544", "2023-03-14": "0.999658"},
+        "USDT": {"2023-03-09": "1.000675", "2023-03-10": "1.000497", "2023-03-11": "1.000010", "2023-03-12": "1.000740", "2023-03-13": "1.008063", "2023-03-14": "1.004856"},
+        "DAI":  {"2023-03-09": "0.999937", "2023-03-10": "0.999331", "2023-03-11": "0.995431", "2023-03-12": "0.966877", "2023-03-13": "0.992594", "2023-03-14": "1.001073"}
+      }
+    },
+    "may2022": {
+      "label": "May 2022 Terra/UST collapse (UST went to zero; USDT briefly traded below par on May 12, 2022)",
+      "short": "May 2022: Terra collapses, USDT wobbles",
+      "source": "CoinGecko MCP get-coin-history, 00:00 UTC daily snapshots",
+      "retrieved": "2026-11-07",
+      "dates": ["2022-05-09", "2022-05-10", "2022-05-11", "2022-05-12", "2022-05-13", "2022-05-14"],
+      "prices": {
+        "USDC": {"2022-05-09": "0.999469", "2022-05-10": "0.999203", "2022-05-11": "0.999452", "2022-05-12": "1.004883", "2022-05-13": "1.001578", "2022-05-14": "1.002375"},
+        "USDT": {"2022-05-09": "1.001727", "2022-05-10": "1.000238", "2022-05-11": "1.001218", "2022-05-12": "0.995969", "2022-05-13": "0.998053", "2022-05-14": "1.000610"},
+        "DAI":  {"2022-05-09": "1.002713", "2022-05-10": "1.000011", "2022-05-11": "1.001603", "2022-05-12": "0.998574", "2022-05-13": "1.000240", "2022-05-14": "1.002410"}
       }
     }
   }

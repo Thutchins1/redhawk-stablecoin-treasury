@@ -34,6 +34,24 @@ test('missing or invalid input is rejected, not guessed',async()=>{
  assert.throws(()=>replayDepeg({holdings:t.holdings,series:{dates:['2023-03-09'],prices:{USDC:{}}}}),/No USDC price for 2023-03-09/);
 });
 
+test('headline summarises the alert list in one sentence',async()=>{
+ const t=await load('stablecoin_treasury'),px=await load('stablecoin_prices');
+ const r=treasuryRisk({holdings:t.holdings,prices:px.current.prices,policy:t.policy});
+ assert.equal(r.headline.status,'warning');assert.match(r.headline.text,/^Watch\. Circle is 60\.00% of the treasury, over the 50\.00% cap\.$/);
+ const clear=treasuryRisk({holdings:t.holdings,prices:px.current.prices,policy:{...t.policy,maxIssuerShareBps:7000}});
+ assert.equal(clear.headline.status,'ok');assert.match(clear.headline.text,/^All clear/);
+ const bad=treasuryRisk({holdings:t.holdings,prices:{...px.current.prices,USDC:{price:'0.970000'}},policy:t.policy});
+ assert.equal(bad.headline.status,'critical');assert.match(bad.headline.text,/^Act now\. USDC is 300 bps below \$1\.00/);
+});
+
+test('May 2022 replay: no coin crosses a threshold, policy never fires, both paths match',async()=>{
+ const t=await load('stablecoin_treasury'),px=await load('stablecoin_prices');
+ const r=replayDepeg({holdings:t.holdings,series:px.scenarios.may2022,policy:t.policy});
+ assert.equal(r.actions.length,0);assert.equal(r.result.policyMinusHold,'0.00');
+ const d=r.days.find(x=>x.date==='2022-05-12');assert.equal(d.hold.worstAsset,'USDC');assert.equal(d.hold.level,'ok');
+ assert.ok(r.days.every(x=>x.hold.value===x.policy.value));assert.match(r.summary,/matches holding exactly/);
+});
+
 test('thresholds are inclusive and alerts carry the triggering price',()=>{
  const holdings=[{asset:'AAA',issuer:'A',units:'100.000000'},{asset:'BBB',issuer:'B',units:'100.000000'}];
  const r=treasuryRisk({holdings,prices:{AAA:{price:'0.995000',source:'test'},BBB:{price:'0.980000',source:'test'}},policy:{pegWarningBps:50,pegCriticalBps:200}});
@@ -44,7 +62,7 @@ test('thresholds are inclusive and alerts carry the triggering price',()=>{
 
 test('March 2023 replay: policy sells at the bottom and ends behind holding; values reconcile',async()=>{
  const t=await load('stablecoin_treasury'),px=await load('stablecoin_prices');
- const r=replayDepeg({holdings:t.holdings,series:px.march2023,policy:t.policy});
+ const r=replayDepeg({holdings:t.holdings,series:px.scenarios.march2023,policy:t.policy});
  assert.equal(r.days.length,6);
  // No action before the critical day; both paths identical.
  for(const d of r.days.slice(0,3))assert.equal(d.hold.value,d.policy.value);
@@ -55,7 +73,7 @@ test('March 2023 replay: policy sells at the bottom and ends behind holding; val
  assert.equal(minor(r.result.policyMinusHold,{signed:true}),minor(r.result.policyFinal)-minor(r.result.holdFinal));
  assert.ok(minor(r.result.realizedShortfallVersusPar)>0n);
  // Hold path on the last day equals a direct valuation at that day's prices.
- const direct=treasuryRisk({holdings:t.holdings,prices:Object.fromEntries(Object.entries(px.march2023.prices).map(([a,s])=>[a,{price:s['2023-03-14']}])),policy:t.policy});
+ const direct=treasuryRisk({holdings:t.holdings,prices:Object.fromEntries(Object.entries(px.scenarios.march2023.prices).map(([a,s])=>[a,{price:s['2023-03-14']}])),policy:t.policy});
  assert.equal(r.days[5].hold.value,direct.totalValue);
  // Unit conservation on the sold assets: remaining = original − sold.
  const usdc=r.result.finalHoldings.find(h=>h.asset==='USDC');const sold=r.actions.find(a=>a.sold.asset==='USDC').sold.units;
@@ -81,8 +99,8 @@ test('replay with no breach matches holding exactly',()=>{
 test('narrative is built only from computed fields',async()=>{
  const t=await load('stablecoin_treasury'),px=await load('stablecoin_prices');
  const risk=treasuryRisk({holdings:t.holdings,prices:px.current.prices,policy:t.policy,asOf:'2026-11-06'});
- const lines=narrative(risk,replayDepeg({holdings:t.holdings,series:px.march2023,policy:t.policy}));
- assert.ok(lines[0].includes(risk.totalValue));assert.ok(lines.some(l=>l.startsWith('MEDIUM: Circle')));assert.ok(lines.at(-1).startsWith('Replay of'));
+ const lines=narrative(risk,replayDepeg({holdings:t.holdings,series:px.scenarios.march2023,policy:t.policy}));
+ assert.equal(lines[0],risk.headline.text);assert.ok(lines[1].includes(risk.totalValue));assert.ok(lines.some(l=>l.startsWith('MEDIUM: Circle')));assert.ok(lines.at(-1).startsWith('Replay of'));
 });
 
 test('treasury API routes serve fixture, accept custom policy and reject bad input',async()=>{

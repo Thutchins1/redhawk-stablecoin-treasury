@@ -18,6 +18,9 @@ THE TWO-MINUTE SCRIPT (say it in your own words)
 
 This is a risk monitor for a company holding $250,000 across three stablecoins.
 
+[Point at the banner]
+The first line tells you the status in one sentence: right now it's yellow, Circle is over the cap.
+
 [Point at the top row]
 Up top: current value versus par, who the biggest issuer is, and open alerts. Right now it flags that Circle backs 60% of the treasury, over the 50% cap in the policy.
 
@@ -27,10 +30,13 @@ The policy is editable. Warn at half a percent, act at two percent, sell half if
 [Scroll to the replay chart]
 The part I'm proudest of: it replays the real March 2023 crash against that policy. Blue is holding, red is following the rule. Both drop on March 12. Holding recovers fully by the 14th. Following the rule sells at the bottom and ends $3,262 behind.
 
+[Switch the dropdown to May 2022]
+Same policy, different crash. Nothing crosses the line, both paths match, the tool says there's nothing to do. It knows when to stay quiet.
+
 [Point at the verdict sentence]
 So the tool doesn't just alert, it tests whether your own policy would have helped or hurt, before you need it.
 
-Everything is exact-cents math with sources cited. Prices from CoinGecko. The summary text is built from the numbers, no AI making up figures. 27 tests pass."
+Everything is exact-cents math with sources cited. Prices from CoinGecko. The summary text is built from the numbers, no AI making up figures. 29 tests pass."
 
 ------------------------------------------------------------
 QUESTIONS JUDGES WILL PROBABLY ASK
@@ -48,7 +54,7 @@ Q: What are the limitations?
 A: Six daily price points, so it misses intraday lows which were worse. No fees or slippage. Thresholds are our assumptions. Not a compliance tool.
 
 Q: What would you add next?
-A: More crash scenarios, like May 2022 when Terra collapsed. Live price refresh. Hooking it to the Supabase team database so a whole finance team shares it.
+A: More crash scenarios beyond the two. Live price refresh. Hooking it to the Supabase team database so a whole finance team shares it.
 
 Q: Why does the policy lose money? Isn't selling the safe move?
 A: Selling locks in the loss. Holding only loses if the coin never recovers. USDC recovered in three days because Circle got its money back when the government backstopped SVB deposits. The tool's point is that you should test the rule against history before trusting it.
@@ -63,4 +69,4 @@ Page blank or error about fetch: the server isn't running. Open Terminal, run:
   cd ~/redhawk-starter && npm run dev
 Then open http://127.0.0.1:4180 in Chrome. Never double-click the HTML file.
 
-Numbers to have ready: $250,000 treasury. Circle 60%. March 12 USDC 0.9603 = 397 bps below. Policy ended $3,262.72 behind holding. 27 tests.
+Numbers to have ready: $250,000 treasury. Circle 60%. March 12 USDC 0.9603 = 397 bps below. Policy ended $3,262.72 behind holding. May 2022: nothing fires. 29 tests.

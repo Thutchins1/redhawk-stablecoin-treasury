@@ -9,13 +9,13 @@ Output or decision supported: Whether the treasury is inside policy today, which
 Three features in scope:
  1. Peg deviation scoring per asset in basis points with ok / warning / critical levels and source-cited alerts (MVP 2).
  2. Issuer concentration: share per issuer, Herfindahl index, effective-issuer count, cap breach alert (MVP 2).
- 3. March 2023 depeg replay: hold path versus policy path day by day, every forced sale logged with its shortfall versus par, and a one-sentence verdict (MVP 3 stretch).
+ 3. Crash replay: March 2023 (USDC depeg) and May 2022 (Terra collapse) replayed day by day, hold path versus policy path, every forced sale logged with its shortfall versus par, and a one-sentence verdict (MVP 3 stretch). A one-line green/yellow/red headline at the top of the page states the current status.
 What we will leave out: Live exchange execution, wallet connections, DeFiLlama reserve data, slippage and fee modelling, multi-currency treasuries, authentication (demo routes are unauthenticated and local-only).
 Demo acceptance criteria:
  - Valid input: GET /api/treasury on the fixture returns par value 250,000.00, holding values that sum to the total to the cent, one issuer-concentration alert (Circle above 50% cap) and no peg alerts.
  - Missing/invalid input: a holding with no price, repeated assets, more than six decimals, or a warning threshold above the critical threshold is rejected with a 400 and a specific message, never a guess.
  - Reconciliation: replay hold-path value on 2023-03-14 equals a direct valuation at that day's prices; policy path units equal original minus sold; the policy ends behind holding and the realized shortfall is positive.
- All three are automated in tests/stablecoin.test.js (npm test, 27 passing: 18 from the starter pack plus 9 for this challenge).
+ All three are automated in tests/stablecoin.test.js (npm test, 29 passing: 18 from the starter pack plus 11 for this challenge).
 Tools and integrations: Node 22+ native HTTP backend from the starter pack, lib/finance.js BigInt money utilities, CoinGecko MCP connector (free, no key) for price retrieval, Claude Code as the build assistant. Supabase team model available but not required for the offline demo.
 Source and permission notes: CoinGecko data used under its free public terms via the official MCP connector; retrieval dates recorded in data/stablecoin_prices.json. Treasury holdings and policy thresholds are invented for the demo and labelled synthetic.
 Known limitations: Six daily price points for the replay (no intraday lows, which were worse). Rule executes at the snapshot price with no slippage, fees or settlement delay. Thresholds are team assumptions, not regulatory guidance. The summary text is a deterministic template; no language model generates figures. Not a compliance or production tool.
@@ -25,5 +25,6 @@ DEMO PROCEDURE (about two minutes)
 2. Point at the KPI row: treasury is $0.xx under par today, Circle is 60% of the book, one medium alert.
 3. Scroll to Policy, change "Act at" from 200 to 100 bps, click Re-score. Show alerts and replay update from the same engine.
 4. Scroll to the replay chart: both lines together until March 12, policy line drops and never recovers. Read the verdict sentence.
-5. Click Generate summary: every number traces back to the table above it.
-6. Show npm test output: 27 passing, including the three acceptance checks.
+5. Switch the scenario dropdown to May 2022: nothing crosses the threshold, both lines overlap, verdict says the policy matches holding. The tool knows when to stay quiet.
+6. Click Generate summary: every number traces back to the table above it.
+7. Show npm test output: 29 passing, including the three acceptance checks.

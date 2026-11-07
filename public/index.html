@@ -24,13 +24,19 @@ button{padding:9px 16px;border-radius:8px;border:1px solid var(--accent);backgro
 .verdict{font-size:16px;padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
 svg{width:100%;height:auto;display:block}.note{font-size:12px;color:var(--muted)}pre{white-space:pre-wrap;font:inherit;margin:0}
 #explain li{margin:6px 0}
+.banner{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:14px;margin:0 0 16px;border:1px solid var(--line);background:var(--card);font-size:17px}.banner .dot{width:18px;height:18px;border-radius:50%;flex:0 0 18px}.banner .status{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:13px;margin-bottom:2px}
+.banner.ok{background:var(--okbg);border-color:var(--ok)}.banner.ok .dot{background:var(--ok)}.banner.ok .status{color:var(--ok)}
+.banner.warning{background:var(--warnbg);border-color:var(--warn)}.banner.warning .dot{background:var(--warn)}.banner.warning .status{color:var(--warn)}
+.banner.critical{background:var(--critbg);border-color:var(--crit)}.banner.critical .dot{background:var(--crit)}.banner.critical .status{color:var(--crit)}
+select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
 </style>
 </head>
 <body>
 <main>
 <h1>Stablecoin Treasury Monitor</h1>
-<p class="sub">Peg deviation, issuer concentration and a replay of the March 2023 USDC depeg against a stated rebalance policy. Fictional USD 250,000 treasury; prices cached from CoinGecko.</p>
+<p class="sub">Peg deviation, issuer concentration, and replays of past stablecoin crashes against a stated rebalance policy. Fictional USD 250,000 treasury; prices cached from CoinGecko.</p>
 
+<div class="banner" id="banner"><span class="dot"></span><div><div class="status" id="bannerStatus"></div><div id="bannerText"></div></div></div>
 <section class="grid" id="kpis"></section>
 
 <h2>Holdings</h2>
@@ -52,7 +58,8 @@ svg{width:100%;height:auto;display:block}.note{font-size:12px;color:var(--muted)
  <div><button type="submit">Re-score with this policy</button></div>
 </form><p class="note" id="policyNote"></p></div>
 
-<h2>Replay: March 2023 depeg</h2>
+<h2>Replay a past crash against this policy</h2>
+<div class="row"><label for="scenario" style="font-size:14px;color:var(--ink)">Scenario</label><select id="scenario"></select><span class="note" id="scenarioLabel"></span></div>
 <div class="card"><svg id="chart" viewBox="0 0 720 240" role="img" aria-label="Treasury value by day, hold versus policy"></svg><div class="legend"><span><i style="background:var(--accent)"></i>Hold (never trade)</span><span><i style="background:var(--crit)"></i>Follow policy</span></div></div>
 <table id="replay" style="margin-top:12px"><thead><tr><th>Date</th><th>Worst asset</th><th class="num">Off peg (bps)</th><th>Status</th><th class="num">Hold value</th><th class="num">Policy value</th><th class="num">Actions</th></tr></thead><tbody></tbody></table>
 <div id="actions" style="margin-top:12px"></div>
@@ -65,10 +72,12 @@ svg{width:100%;height:auto;display:block}.note{font-size:12px;color:var(--muted)
 <script>
 const $=s=>document.querySelector(s);const usd=s=>'$'+Number(s).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});const pct=b=>(b/100).toFixed(2)+'%';
 const colors=['var(--accent)','var(--ok)','var(--warn)','var(--crit)','#8a63d2','#3bb3c3'];
-let policy={};
+let policy={},scenarioId='march2023';
 async function api(path,bodyObj){const r=await fetch(path,bodyObj?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(bodyObj)}:undefined);const j=await r.json();if(!r.ok)throw Error(j.error||r.statusText);return j;}
+const statusWord={ok:'All clear',warning:'Needs attention',critical:'Act now'};
 function renderRisk(r){
  const c=r.concentration;
+ $('#banner').className='banner '+r.headline.status;$('#bannerStatus').textContent=statusWord[r.headline.status];$('#bannerText').textContent=r.headline.text;
  $('#kpis').innerHTML=[['Market value',usd(r.totalValue),'as of '+r.asOf],['Mark vs par',(r.markVersusPar.startsWith('-')?'−':'+')+usd(r.markVersusPar.replace('-','')),'par '+usd(r.parValue)],['Largest issuer',c.largestIssuer+' '+pct(c.largestShareBps),'cap '+pct(c.capBps)],['Herfindahl',c.hhi,c.effectiveIssuers+' effective issuers'],['Open alerts',r.alerts.length,r.alerts.filter(a=>a.severity==='high').length+' high']].map(([l,v,h])=>`<div class="card kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join('');
  $('#holdings tbody').innerHTML=r.holdings.map(h=>`<tr><td><b>${h.asset}</b></td><td>${h.issuer}</td><td class="num">${Number(h.units).toLocaleString('en-US',{maximumFractionDigits:6})}</td><td class="num">${h.price}</td><td class="num">${h.deviationBps>0?'+':''}${h.deviationBps}</td><td class="num">${usd(h.value)}</td><td class="num">${pct(h.shareBps)}</td><td><span class="badge ${h.level}">${h.level}</span></td></tr>`).join('');
  $('#priceNote').textContent='Price source: '+[...new Set(r.holdings.map(h=>h.priceSource))].join('; ')+'. Retrieved '+(r.holdings[0].priceRetrieved||'n/a')+'. '+r.assumptions;
@@ -82,17 +91,19 @@ function renderRisk(r){
 function renderReplay(r){
  $('#replay tbody').innerHTML=r.days.map(d=>`<tr><td>${d.date}</td><td>${d.hold.worstAsset}</td><td class="num">${d.hold.worstBps>0?'+':''}${d.hold.worstBps}</td><td><span class="badge ${d.hold.level}">${d.hold.level}</span></td><td class="num">${usd(d.hold.value)}</td><td class="num">${usd(d.policy.value)}</td><td class="num">${d.policy.actions||''}</td></tr>`).join('');
  $('#actions').innerHTML=r.actions.map(a=>`<div class="alert high"><span class="badge high">action</span> <b>${a.date}</b> — sold ${Number(a.sold.units).toLocaleString('en-US')} ${a.sold.asset} at ${a.sold.price} for ${usd(a.sold.proceeds)} (${usd(a.sold.shortfallVersusPar.replace('-',''))} ${a.sold.shortfallVersusPar.startsWith('-')?'above':'below'} par), bought ${Number(a.bought.units).toLocaleString('en-US',{maximumFractionDigits:2})} ${a.bought.asset} at ${a.bought.price}</div>`).join('');
- $('#verdict').textContent=r.summary;$('#replayNote').textContent=r.source+' (retrieved '+r.retrieved+'). '+r.assumptions;
- const vals=r.days.flatMap(d=>[Number(d.hold.value),Number(d.policy.value)]);const lo=Math.min(...vals)-500,hi=Math.max(...vals)+500;const W=720,H=240,L=70,R=16,T=16,B=36;
+ $('#verdict').textContent=r.summary;$('#replayNote').textContent=r.source+' (retrieved '+r.retrieved+'). '+r.assumptions;$('#scenarioLabel').textContent=r.label;
+ const vals=r.days.flatMap(d=>[Number(d.hold.value),Number(d.policy.value)]);const lo=Math.min(...vals)-500,hi=Math.max(...vals)+500;const W=720,H=240,L=78,R=16,T=16,B=36;
  const x=i=>L+i*(W-L-R)/(r.days.length-1),y=v=>T+(hi-v)*(H-T-B)/(hi-lo);
  const line=(key,color)=>`<polyline fill="none" stroke="${color}" stroke-width="2.5" points="${r.days.map((d,i)=>x(i)+','+y(Number(d[key].value))).join(' ')}"/>`+r.days.map((d,i)=>`<circle cx="${x(i)}" cy="${y(Number(d[key].value))}" r="3.5" fill="${color}"><title>${d.date} ${key}: ${usd(d[key].value)}</title></circle>`).join('');
- const ticks=[lo+500,(lo+hi)/2,hi-500].map(v=>`<text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${Math.round(v/1000)}k</text><line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/>`).join('');
+ const ticks=[lo+500,(lo+hi)/2,hi-500].map(v=>`<text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">$${Math.round(v).toLocaleString('en-US')}</text><line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/>`).join('');
  $('#chart').innerHTML=ticks+r.days.map((d,i)=>`<text x="${x(i)}" y="${H-12}" text-anchor="middle" font-size="11" fill="var(--muted)">${d.date.slice(5)}</text>`).join('')+line('hold','var(--accent)')+line('policy','var(--crit)');
 }
-async function loadAll(p){try{const [risk,replay]=await Promise.all([api('/api/treasury',p?{policy:p}:undefined),api('/api/treasury/replay',p?{policy:p}:undefined)]);renderRisk(risk);renderReplay(replay);$('#explain').innerHTML='';}catch(e){$('#alerts').innerHTML='<div class="alert high">'+e.message+'</div>';}}
-$('#policy').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);loadAll(Object.fromEntries([...f].map(([k,v])=>[k,Number(v)])));});
-$('#explainBtn').addEventListener('click',async()=>{const j=await api('/api/treasury/explain',{policy});$('#explain').innerHTML=j.lines.map(l=>'<li>'+l+'</li>').join('');$('#explainNote').textContent=j.note;});
-loadAll();
+async function loadAll(p){try{const [risk,replay]=await Promise.all([api('/api/treasury',p?{policy:p}:undefined),api('/api/treasury/replay',{policy:p||{},scenario:scenarioId})]);renderRisk(risk);renderReplay(replay);$('#explain').innerHTML='';}catch(e){$('#alerts').innerHTML='<div class="alert high">'+e.message+'</div>';}}
+function currentPolicy(){const f=new FormData($('#policy'));return Object.fromEntries([...f].map(([k,v])=>[k,Number(v)]));}
+$('#policy').addEventListener('submit',e=>{e.preventDefault();loadAll(currentPolicy());});
+$('#scenario').addEventListener('change',e=>{scenarioId=e.target.value;loadAll(currentPolicy());});
+$('#explainBtn').addEventListener('click',async()=>{const j=await api('/api/treasury/explain',{policy,scenario:scenarioId});$('#explain').innerHTML=j.lines.map(l=>'<li>'+l+'</li>').join('');$('#explainNote').textContent=j.note;});
+api('/api/scenarios').then(list=>{$('#scenario').innerHTML=list.map(s=>`<option value="${s.id}">${s.short}</option>`).join('');$('#scenario').value=scenarioId;}).then(loadAll);
 </script>
 </body>
 </html>
