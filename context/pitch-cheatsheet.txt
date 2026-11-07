@@ -1,0 +1,66 @@
+PITCH CHEAT SHEET — Challenge 28, Stablecoin Treasury Monitor
+Read this three times. Then practice the two-minute script out loud twice.
+
+------------------------------------------------------------
+FIVE THINGS TO KNOW COLD
+------------------------------------------------------------
+1. Stablecoin = a crypto token meant to always be worth $1.00. Companies hold them like cash. USDC, USDT, DAI are the big three.
+2. Peg deviation = how far the price is from $1.00. We measure it in basis points (bps). 100 bps = 1%. A 2% drop is 200 bps.
+3. Issuer concentration = how much of the money depends on one company. Circle issues USDC, Tether issues USDT, MakerDAO issues DAI. If 60% of your cash is USDC and Circle has a problem, 60% of your cash has a problem.
+4. March 2023 = the one time USDC broke. Silicon Valley Bank failed, Circle had $3.3 billion stuck there, USDC fell to 96 cents over a weekend, then recovered by Tuesday.
+5. The replay = we take the real prices from that week and ask "if the company had a rule that said sell when it drops 2%, what would have happened?" Answer: they'd have sold at the bottom and lost about $3,300 that holding would have gotten back.
+
+------------------------------------------------------------
+THE TWO-MINUTE SCRIPT (say it in your own words)
+------------------------------------------------------------
+[Open the page]
+"Companies are starting to keep cash in stablecoins. The problem is they have no monitoring for it. In March 2023, USDC dropped to 96 cents over a weekend and treasury teams were making decisions off screenshots.
+
+This is a risk monitor for a company holding $250,000 across three stablecoins.
+
+[Point at the top row]
+Up top: current value versus par, who the biggest issuer is, and open alerts. Right now it flags that Circle backs 60% of the treasury, over the 50% cap in the policy.
+
+[Point at the policy box]
+The policy is editable. Warn at half a percent, act at two percent, sell half if it breaks.
+
+[Scroll to the replay chart]
+The part I'm proudest of: it replays the real March 2023 crash against that policy. Blue is holding, red is following the rule. Both drop on March 12. Holding recovers fully by the 14th. Following the rule sells at the bottom and ends $3,262 behind.
+
+[Point at the verdict sentence]
+So the tool doesn't just alert, it tests whether your own policy would have helped or hurt, before you need it.
+
+Everything is exact-cents math with sources cited. Prices from CoinGecko. The summary text is built from the numbers, no AI making up figures. 27 tests pass."
+
+------------------------------------------------------------
+QUESTIONS JUDGES WILL PROBABLY ASK
+------------------------------------------------------------
+Q: Who is the user?
+A: A treasury analyst or finance manager at a company that holds some operating cash in stablecoins.
+
+Q: Where does the data come from?
+A: CoinGecko, through its official connector. Current prices and daily snapshots from March 2023. Dates and sources are recorded in the data file. The treasury holdings are fictional, the pack requires that.
+
+Q: What did you use AI for?
+A: Claude Code built the code with me directing it, which is how the starter pack told us to work. I picked the challenge and the replay angle and tested the policy settings. The app itself does not use AI for any number; the pack says calculations must be in code.
+
+Q: What are the limitations?
+A: Six daily price points, so it misses intraday lows which were worse. No fees or slippage. Thresholds are our assumptions. Not a compliance tool.
+
+Q: What would you add next?
+A: More crash scenarios, like May 2022 when Terra collapsed. Live price refresh. Hooking it to the Supabase team database so a whole finance team shares it.
+
+Q: Why does the policy lose money? Isn't selling the safe move?
+A: Selling locks in the loss. Holding only loses if the coin never recovers. USDC recovered in three days because Circle got its money back when the government backstopped SVB deposits. The tool's point is that you should test the rule against history before trusting it.
+
+Q: Why only three stablecoins?
+A: They are the three biggest and the ones a real treasury would hold. The engine accepts any list.
+
+------------------------------------------------------------
+IF SOMETHING BREAKS AT THE TABLE
+------------------------------------------------------------
+Page blank or error about fetch: the server isn't running. Open Terminal, run:
+  cd ~/redhawk-starter && npm run dev
+Then open http://127.0.0.1:4180 in Chrome. Never double-click the HTML file.
+
+Numbers to have ready: $250,000 treasury. Circle 60%. March 12 USDC 0.9603 = 397 bps below. Policy ended $3,262.72 behind holding. 27 tests.
