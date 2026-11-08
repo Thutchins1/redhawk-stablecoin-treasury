@@ -1,0 +1,54 @@
+DEVPOST SUBMISSION TEXT. Copy each block into the matching field.
+
+=== PROJECT NAME ===
+Stablecoin Treasury Risk Monitor
+
+=== TAGLINE (one line) ===
+Challenge 28: peg, concentration and a replay of the March 2023 USDC crash against your own sell rule.
+
+=== REPOSITORY LINK ===
+https://github.com/Thutchins1/redhawk-stablecoin-treasury
+
+=== DEMO LINK ===
+https://github.com/Thutchins1/redhawk-stablecoin-treasury#run-it
+(The app runs locally: npm ci, npm run dev, open http://127.0.0.1:4180. No accounts or keys. The demo video shows the full flow.)
+
+=== PROJECT DESCRIPTION ===
+Problem statement: Challenge 28, Stablecoin treasury risk monitor. Track peg deviation, concentration and rebalance alerts.
+
+Who it is for: a treasury analyst at a company that keeps part of its operating cash in stablecoins such as USDC, USDT and DAI.
+
+The problem: in March 2023, USDC fell to 96 cents over a weekend after Silicon Valley Bank failed. Treasury teams had no quick way to see how far off $1.00 they were, how much of their cash depended on one issuer, or whether their "sell if it breaks" instinct would help or hurt. Decisions were made from exchange screenshots.
+
+What we built: a one-page dashboard that
+1. Scores each stablecoin's distance from $1.00 in basis points, with ok / warning / critical levels and alerts that cite the price and source.
+2. Measures issuer concentration (share per issuer, Herfindahl index, effective issuer count) against a cap, and flags breaches.
+3. Replays two real depegs, March 2023 (USDC) and May 2022 (Terra), day by day against the company's own editable rebalance policy. It shows a hold path versus a policy path, logs every forced sale with its shortfall versus par, and gives a one-sentence verdict.
+
+With the default policy (act at 2%, sell half), the March 2023 replay sells USDC and DAI at the bottom and ends $3,262.72 behind simply holding. Raise the threshold to 4% and the policy never fires. In May 2022 nothing crosses the line and the tool correctly stays quiet. The point: test your rule against history before you need it.
+
+Built on the organizers' Node.js starter pack. Exact-cents BigInt math, deterministic rules, 29 passing tests including the three required acceptance checks (valid input, invalid input rejected with a specific message, reconciliation of replay values against a direct valuation).
+
+Limitations: six daily price points per scenario, so intraday lows are missed. No fees or slippage. Thresholds are team assumptions, not regulation. Not a compliance tool.
+
+=== REAL VERSUS MOCKED, AND AI USE ===
+Real: all stablecoin prices (current snapshot and the daily series for March 9-14, 2023 and May 9-14, 2022), retrieved from CoinGecko through its official MCP connector and cached in data/stablecoin_prices.json with source and retrieval date.
+
+Mocked: the $250,000 treasury and its holdings are a fictional fixture, labelled synthetic in data/stablecoin_treasury.json. Policy thresholds are demo assumptions and editable in the UI. No live API calls at runtime. Supabase and the other connectors were set up but are not used by the app.
+
+AI use: the code, tests and README were written with Claude Code (Anthropic), directed by the team: choosing the challenge and MVP, the replay idea, the policy rules, and testing thresholds. The app itself contains no language model. Every number is computed in lib/stablecoin.js and the summary text is a deterministic template.
+
+Timeline: prototyping began Friday evening after the workshops. The submission repository was created Saturday, November 7 at 1:22 PM ET and the full commit history was pushed unchanged. Organizers were informed.
+
+=== BUILT WITH (tags) ===
+node.js, javascript, html, coingecko, claude-code
+
+=== VIDEO SCRIPT (under 2 minutes, read while recording) ===
+1. Open the page. "Companies keep cash in stablecoins, coins meant to always be worth one dollar. In March 2023 USDC dropped to 96 cents and treasury teams had no dashboard. This is one, for a company holding 250 thousand dollars across three coins."
+2. Point at the yellow bar. "First line is the status. Yellow means watch. Circle backs 60 percent of the money and the cap is 50."
+3. Point at the five boxes. "Current value, how far off a dollar, biggest issuer, concentration score, open alerts."
+4. Scroll to the policy box. "These are the company's own rules. Change a number and everything recalculates." Change Act at from 200 to 100, click Re-score.
+5. Scroll to the chart. "This replays the real 2023 crash. Blue is holding, red is following the rule. The rule sold at the bottom and ended 3,262 dollars behind."
+6. Change Act at to 400, Re-score. "At 4 percent the rule never fires and matches holding. The tool shows the trade-off."
+7. Switch the dropdown to May 2022. "Different crash, nothing crossed the line, the tool stays quiet."
+8. "Exact-cents math in code, prices from CoinGecko, 29 tests pass. Thanks."
